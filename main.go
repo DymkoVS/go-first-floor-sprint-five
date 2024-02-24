@@ -20,7 +20,8 @@ type Training struct {
 	Action       int           // количество повторов(шаги, гребки при плавании)
 	LenStep      float64       // длина одного шага или гребка в м
 	Duration     time.Duration // продолжительность тренировки
-	Weight       float64       // вес пользователя в кг
+	//	Duration float64
+	Weight float64 // вес пользователя в кг
 }
 
 // distance возвращает дистанцию, которую преодолел пользователь.
@@ -39,7 +40,6 @@ func (t Training) meanSpeed() float64 {
 		return 0
 	}
 	return t.distance() / t.Duration.Hours()
-
 }
 
 // Calories возвращает количество потраченных килокалорий на тренировке.
@@ -187,7 +187,7 @@ type Swimming struct {
 // Формула расчета:
 // длина_бассейна * количество_пересечений / м_в_км / продолжительность_тренировки
 // Это переопределенный метод Calories() из Training.
-func (s Swimming) meanSpeed() float64 {
+func (s Swimming) SwimingMeanSpeed() float64 {
 	// вставьте ваш код ниже
 	if s.Duration == 0 {
 		return 0
@@ -202,7 +202,8 @@ func (s Swimming) meanSpeed() float64 {
 // Это переопределенный метод Calories() из Training.
 func (s Swimming) Calories() float64 {
 	// вставьте ваш код ниже
-	s1 := s.meanSpeed() + SwimmingCaloriesMeanSpeedShift
+	//	fmt.Println(s.SwimingMeanSpeed())
+	s1 := s.SwimingMeanSpeed() + SwimmingCaloriesMeanSpeedShift
 	s2 := SwimmingCaloriesWeightMultiplier * s.Weight * s.Duration.Hours()
 	return s1 + s2
 }
@@ -211,14 +212,14 @@ func (s Swimming) Calories() float64 {
 // Это переопределенный метод TrainingInfo() из Training.
 func (s Swimming) TrainingInfo() InfoMessage {
 	// вставьте ваш код ниже
-	return s.Training.TrainingInfo()
-	//	return InfoMessage{
-	//		TrainingType: s.TrainingType,
-	//		Duration:     s.Duration,
-	//		Distance:     s.distance(),
-	//		Speed:        s.meanSpeed(),
-	//		Calories:     s.Calories(),
-	//	}
+	//	return s.Training.TrainingInfo()
+	return InfoMessage{
+		TrainingType: s.TrainingType,
+		Duration:     s.Duration,
+		Distance:     s.distance(),
+		Speed:        s.SwimingMeanSpeed(),
+		Calories:     s.Calories(),
+	}
 }
 
 // ReadData возвращает информацию о проведенной тренировке.
