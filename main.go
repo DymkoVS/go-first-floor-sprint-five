@@ -187,7 +187,7 @@ type Swimming struct {
 // Формула расчета:
 // длина_бассейна * количество_пересечений / м_в_км / продолжительность_тренировки
 // Это переопределенный метод Calories() из Training.
-func (s Swimming) SwimingMeanSpeed() float64 {
+func (s Swimming) SwimmingMeanSpeed() float64 {
 	// вставьте ваш код ниже
 	if s.Duration == 0 {
 		return 0
@@ -203,7 +203,8 @@ func (s Swimming) SwimingMeanSpeed() float64 {
 func (s Swimming) Calories() float64 {
 	// вставьте ваш код ниже
 	//	fmt.Println(s.SwimingMeanSpeed())
-	s1 := s.SwimingMeanSpeed() + SwimmingCaloriesMeanSpeedShift
+	fmt.Println("from Calories", s.SwimmingMeanSpeed())
+	s1 := s.SwimmingMeanSpeed() + SwimmingCaloriesMeanSpeedShift
 	s2 := SwimmingCaloriesWeightMultiplier * s.Weight * s.Duration.Hours()
 	return s1 + s2
 }
@@ -212,12 +213,18 @@ func (s Swimming) Calories() float64 {
 // Это переопределенный метод TrainingInfo() из Training.
 func (s Swimming) TrainingInfo() InfoMessage {
 	// вставьте ваш код ниже
+	fmt.Println("from TraningInfo", s.SwimmingMeanSpeed())
 	//	return s.Training.TrainingInfo()
+	// Так как средняя скорость для плавания считается особым образом, то метод для плавания надо описывать именно так
+	// в противном случае отобазится средняя скорость средняя скорость из общего рассчета.
+	// Но в расчете каллорий будет корректные данные.
+	// Логика расчета средней скорости плавания не совсем корректная
+	// В расчет беертся только 250 метров
 	return InfoMessage{
 		TrainingType: s.TrainingType,
 		Duration:     s.Duration,
 		Distance:     s.distance(),
-		Speed:        s.SwimingMeanSpeed(),
+		Speed:        s.SwimmingMeanSpeed(),
 		Calories:     s.Calories(),
 	}
 }
